@@ -61,6 +61,7 @@ def fetch_plot(path, outdir_name=None, suffix=''):
     fname = path.split('/')[-1] # filename
     fname = fname[:-4]+suffix+fname[-4:] # filename with suffix
     shutil.copy2(path, os.path.join(outbasedir, outdir_name, fname))
+    #print("copying ", fname," to ",outbasedir,",",outdir_name)
     return fname
 
 def draw_sfbdtvary_plot(wp, pt, ptcut, bdtlist, savepath=None):
@@ -90,7 +91,7 @@ def make_new_dir(indir, outbasedir=None):
         os.makedirs(os.path.join(outbasedir, outdir_name))
     return outdir_name
 
-def make_website(indir, outdir_name, scanned_wp_list=['TP','MP','LP']):
+def make_website(indir, outdir_name, scanned_wp_list=['TP','MP','LP','L2P','L3P']):
     r"""The main function to make the website
     """
     print (f'config: {indir}, {outdir_name}')
@@ -103,7 +104,7 @@ def make_website(indir, outdir_name, scanned_wp_list=['TP','MP','LP']):
     ptcutlist = [(int(pt.split('to')[0].split('pt')[1]), int(pt.split('to')[1])) for pt in ptlist]
     print(ptlist)
 
-    wpname = {'TP':'Tight', 'MP':'Medium', 'LP':'Loose'}
+    wpname = {'TP':'Tight', 'MP':'Medium', 'LP':'Loose', 'L2P':'Loose2', 'L3P':'Loose3'}
 
     for bdtdir in bdtlist:
         mkdown_str = ''
@@ -112,10 +113,10 @@ def make_website(indir, outdir_name, scanned_wp_list=['TP','MP','LP']):
         mkdown_str += '# `sfBDT` > %.2f \n' % (int(bdtdir[3:])/1000.)
 
         ## fit result
-        for sf in ['C', 'B', 'L']:
-            sf_title = {'C':'cc-tagging SF (`SF_flvC`)', 'B':'bb-mistagging SF (`SF_flvB`)', 'L':'light-mistagging SF (`SF_flvL`)'}
-    #     for sf in ['B', 'C', 'L']:
-    #         sf_title = {'C':'cc-mistagging SF (`SF_flvC`)', 'B':'bb-tagging SF (`SF_flvB`)', 'L':'light-mistagging SF (`SF_flvL`)'}
+        #for sf in ['C', 'B', 'L']:
+        #    sf_title = {'C':'cc-tagging SF (`SF_flvC`)', 'B':'bb-mistagging SF (`SF_flvB`)', 'L':'light-mistagging SF (`SF_flvL`)'}
+        for sf in ['B', 'C', 'L']:
+            sf_title = {'B':'bb-tagging SF (`SF_flvB`)','C':'cc-mistagging SF (`SF_flvC`)', 'L':'light-mistagging SF (`SF_flvL`)'}
             mkdown_str += f'## {sf_title[sf]} \n'
             mkdown_str += '|       | ' + ' | '.join(['pT ({}, {})'.format(ptmin, ptmax if ptmax!=100000 else '+inf') for ptmin, ptmax in ptcutlist]) + ' | \n'
             mkdown_str += '| :---: '*(len(ptlist)+1) + '| \n'
@@ -151,7 +152,7 @@ def make_website(indir, outdir_name, scanned_wp_list=['TP','MP','LP']):
                                 mkdown_str += f'<textarea name="a" style="width:400px;height:400px;">{except_str}</textarea> \n'
                         mkdown_str += ' \n'
 
-
+                '''
                 ## prefit template
                 mkdown_str += f'## Pre/post-fit template (**{wpname[wp]}** WP) \n'
                 for wpcat in ['pass', 'fail']:
@@ -168,7 +169,7 @@ def make_website(indir, outdir_name, scanned_wp_list=['TP','MP','LP']):
                             except_str = 'pT ({}, {}) vacant'.format(ptmin, ptmax if ptmax!=100000 else '+inf')
                             mkdown_str += f'<textarea name="a" style="width:400px;height:400px;">{except_str}</textarea> \n'
                     mkdown_str += ' \n'
-
+                '''
                 ## unce comp plots
                 mkdown_str += f'## Shape unce. variations (**{wpname[wp]}** WP) \n'
                 for unce_type in unce_list:
